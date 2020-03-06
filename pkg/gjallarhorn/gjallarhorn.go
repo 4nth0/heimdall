@@ -1,12 +1,12 @@
-package reporter
+package gjallarhorn
 
 import (
 	"errors"
 	"sync"
 	"time"
 
-	"github.com/AnthonyCapirchio/heimdall/pkg/store"
-	"github.com/AnthonyCapirchio/heimdall/pkg/watcher"
+	"github.com/4nth0/heimdall/pkg/store"
+	"github.com/4nth0/heimdall/pkg/watcher"
 )
 
 type Reporter struct {

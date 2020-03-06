@@ -3,8 +3,8 @@ package main
 import (
 	"time"
 
+	"github.com/AnthonyCapirchio/heimdall/pkg/gjallarhorn"
 	"github.com/AnthonyCapirchio/heimdall/pkg/notifier/slack"
-	"github.com/AnthonyCapirchio/heimdall/pkg/reporter"
 	"github.com/AnthonyCapirchio/heimdall/pkg/watcher"
 )
 
@@ -35,8 +35,8 @@ var Frequency = 500 * time.Millisecond
 
 func main() {
 
-	notifiers := []reporter.Notifier{slack.New()}
-	reporter := reporter.NewReporter(notifiers)
+	notifiers := []gjallarhorn.Notifier{slack.New()}
+	reporter := gjallarhorn.NewReporter(notifiers)
 	watchers := watcher.InitWtachers(Targets, Frequency)
 	// Use context ..
 	responses, ok := watchers.Watch()

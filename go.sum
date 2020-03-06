@@ -1,3 +1,5 @@
+github.com/4nth0/heimdall v0.0.0-20200306191544-643ebfb9c447 h1:eCgpGCQzEGaYO6+r55cjooffgfBk/f0t8+dAHfGZRhg=
+github.com/4nth0/heimdall v0.0.0-20200306191544-643ebfb9c447/go.mod h1:2Zu2qnHiVMHza5E4EAq0m89Sx89lXMiLc0TxQJqwQ0w=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
