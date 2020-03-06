@@ -1,47 +1,29 @@
 package main
 
 import (
+	"os"
 	"time"
 
+	"github.com/4nth0/heimdall/internal/config"
 	"github.com/4nth0/heimdall/pkg/gjallarhorn"
 	"github.com/4nth0/heimdall/pkg/notifier/slack"
 	"github.com/4nth0/heimdall/pkg/watcher"
+	log "github.com/sirupsen/logrus"
 )
 
-var Targets = map[string]watcher.Config{
-	"video-ref": watcher.Config{
-		URL:       "https://wizads.val1.p.plop.fr/iptv-sfr?zipcode=94550&video=TF103TF581369",
-		Method:    "GET",
-		Status:    301,
-		Latency:   500,
-		Threshold: 5,
-	},
-	"segment": watcher.Config{
-		URL:     "http://127.0.0.1:8080/web-tf1",
-		Method:  "GET",
-		Status:  200,
-		Latency: 500,
-	},
-	"freewheel": watcher.Config{
-		URL:       "https://tf1pub.drawapi.com/qa/smart-xml",
-		Method:    "GET",
-		Status:    200,
-		Latency:   500,
-		Threshold: 15,
-	},
-}
-
-var Frequency = 500 * time.Millisecond
+var Frequency = 5000 * time.Millisecond
 
 func main() {
+	log.SetOutput(os.Stdout)
+	log.SetLevel(log.DebugLevel)
+
+	cfg := config.LoadConfig("targets.yaml")
 
 	notifiers := []gjallarhorn.Notifier{slack.New()}
 	reporter := gjallarhorn.NewReporter(notifiers)
-	watchers := watcher.InitWtachers(Targets, Frequency)
+	watchers := watcher.InitWtachers(cfg.Targets, Frequency)
 	// Use context ..
-	responses, ok := watchers.Watch()
+	responses, _ := watchers.Watch()
 
 	reporter.Analyze(responses)
-
-	<-ok
 }

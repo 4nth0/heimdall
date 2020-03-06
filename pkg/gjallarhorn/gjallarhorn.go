@@ -32,7 +32,7 @@ type Report struct {
 
 func NewReporter(notifiers []Notifier) *Reporter {
 	return &Reporter{
-		Store:     store.New("./reports.db", true),
+		Store:     store.New("./reports.db", false),
 		Notifiers: notifiers,
 		Reports:   map[string]*Report{},
 	}
