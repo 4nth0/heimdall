@@ -3,9 +3,9 @@ package main
 import (
 	"time"
 
-	"github.com/AnthonyCapirchio/heimdall/pkg/gjallarhorn"
-	"github.com/AnthonyCapirchio/heimdall/pkg/notifier/slack"
-	"github.com/AnthonyCapirchio/heimdall/pkg/watcher"
+	"github.com/4nth0/heimdall/pkg/gjallarhorn"
+	"github.com/4nth0/heimdall/pkg/notifier/slack"
+	"github.com/4nth0/heimdall/pkg/watcher"
 )
 
 var Targets = map[string]watcher.Config{
