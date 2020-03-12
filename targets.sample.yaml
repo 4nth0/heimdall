@@ -1,0 +1,10 @@
+frequency:
+    unit: min
+    value: 30
+targets:
+    video-ref:
+        url: https://httpbin.org/get
+        method: GET
+        status: 200
+        latency: 100
+        threshold: 2
