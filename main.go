@@ -2,7 +2,6 @@ package main
 
 import (
 	"os"
-	"time"
 
 	"github.com/4nth0/heimdall/internal/config"
 	"github.com/4nth0/heimdall/pkg/gjallarhorn"
@@ -12,17 +11,16 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-var Frequency = 5000 * time.Millisecond
-
 func main() {
 	log.SetOutput(os.Stdout)
 	log.SetLevel(log.DebugLevel)
 
 	cfg := config.LoadConfig("targets.yaml")
+	frequency := cfg.GetFrequency()
 
 	notifiers := initNotifiers(cfg)
 	reporter := gjallarhorn.NewReporter(notifiers)
-	watchers := watcher.InitWtachers(cfg.Targets, Frequency)
+	watchers := watcher.InitWtachers(cfg.Targets, frequency)
 	// Use context ..
 	responses, _ := watchers.Watch()
 

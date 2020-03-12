@@ -1,6 +1,7 @@
 package watcher
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -41,6 +42,8 @@ func (w *Watcher) Watch() (chan Response, chan bool) {
 	resp := make(chan Response)
 	ticker := time.NewTicker(w.Frequency)
 	done := make(chan bool)
+
+	fmt.Println("w.Frequency: ", w.Frequency)
 
 	go func() {
 		for {
