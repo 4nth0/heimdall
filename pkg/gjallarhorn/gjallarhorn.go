@@ -27,6 +27,7 @@ type Report struct {
 	Kind     string
 	Expected interface{}
 	Current  interface{}
+	Notified bool
 	Error    error
 }
 
@@ -47,7 +48,9 @@ func (r *Reporter) Analyze(response chan watcher.Response) {
 			if valid == false {
 				r.reportInvalidResponse(report, resp.Target)
 			} else if exists := r.ErrorExists(resp.TargetID); exists == true {
-				r.closeError(resp.TargetID)
+				if r.Reports[resp.TargetID].Notified {
+					r.closeError(resp.TargetID)
+				}
 			}
 		}
 	}
@@ -73,6 +76,7 @@ func (r *Reporter) reportInvalidResponse(report *Report, target *watcher.Config)
 		r.Reports[report.Target] = report
 	}
 	if r.Reports[report.Target].Count == target.Threshold {
+		r.Reports[report.Target].Notified = true
 		r.notify("error", r.Reports[report.Target])
 	}
 }

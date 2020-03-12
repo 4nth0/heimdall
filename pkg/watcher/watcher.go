@@ -1,19 +1,16 @@
 package watcher
 
 import (
-	"fmt"
-	"net/http"
 	"time"
-
-	log "github.com/sirupsen/logrus"
 )
 
 type Config struct {
-	URL       string `yaml:"url,omitempty"`
-	Method    string `yaml:"method,omitempty"`
-	Status    int    `yaml:"status,omitempty"`
-	Latency   int64  `yaml:"latency,omitempty"`
-	Threshold int    `yaml:"threshold,omitempty"`
+	URL       string            `yaml:"url,omitempty"`
+	Method    string            `yaml:"method,omitempty"`
+	Status    int               `yaml:"status,omitempty"`
+	Latency   int64             `yaml:"latency,omitempty"`
+	Threshold int               `yaml:"threshold,omitempty"`
+	Matchs    map[string]string `yaml:"matchs,omitempty"`
 }
 
 type Watcher struct {
@@ -53,7 +50,7 @@ func (w *Watcher) Watch() (chan Response, chan bool) {
 			case <-ticker.C:
 				for id, target := range w.Targets {
 					go func(id string, target Config) {
-						resp <- w.Call(id, &target)
+						resp <- Call(id, &target)
 					}(id, target)
 				}
 			}
@@ -61,50 +58,4 @@ func (w *Watcher) Watch() (chan Response, chan bool) {
 	}()
 
 	return resp, done
-}
-
-func (w Watcher) Call(id string, target *Config) Response {
-
-	log.WithFields(
-		log.Fields{
-			"method": target.Method,
-			"url":    target.URL,
-		}).Info("Make new request.")
-
-	response := Response{
-		Target:   target,
-		TargetID: id,
-	}
-	startRequest := time.Now()
-
-	c := &http.Client{}
-
-	req, err := http.NewRequest(target.Method, target.URL, nil)
-	if err != nil {
-		fmt.Println(err)
-	}
-	resp, err := c.Do(req)
-	if err != nil {
-		response.Error = err
-		log.WithFields(
-			log.Fields{
-				"method": target.Method,
-				"url":    target.URL,
-				"error":  err,
-			}).Debug("Request failed.")
-		return response
-	}
-
-	response.Status = resp.StatusCode
-	response.Latency = time.Now().Sub(startRequest).Milliseconds()
-
-	log.WithFields(
-		log.Fields{
-			"method":  target.Method,
-			"url":     target.URL,
-			"status":  response.Status,
-			"latency": response.Latency,
-		}).Debug("Request finished.")
-
-	return response
 }
