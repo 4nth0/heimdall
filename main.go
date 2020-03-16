@@ -20,9 +20,8 @@ func main() {
 	log.SetLevel(log.TraceLevel)
 
 	commands := map[string]command{
-		// "init": initCmd(),
-		// "help": helpCmd(),
-		// "targets": helpCmd(),
+		"init":  initCmd(),
+		"help":  helpCmd(),
 		"watch": watchCmd(),
 	}
 

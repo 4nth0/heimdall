@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"time"
 
 	"github.com/4nth0/heimdall/pkg/watcher"
@@ -55,4 +56,23 @@ func InitConfig(path string) *Config {
 	}
 
 	return &cfg
+}
+
+func Exists(path string) bool {
+	info, err := os.Stat(path)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
+}
+
+func (c Config) Save() error {
+
+	b, _ := yaml.Marshal(c)
+	err := ioutil.WriteFile(c.path, b, 0644)
+	if err != nil {
+		fmt.Println("Err: ", err)
+	}
+
+	return nil
 }
