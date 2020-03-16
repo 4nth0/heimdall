@@ -3,6 +3,7 @@
 # Edit at https://www.gitignore.io/?templates=go,osx,linux,windows
 
 targets.yaml
+heimdall
 
 ### Go ###
 # Binaries for programs and plugins
