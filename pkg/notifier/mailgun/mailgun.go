@@ -17,13 +17,22 @@ type MailgunNotifier struct {
 	Recipient  string
 }
 
-func New(domain, privateKey, sender, recipient string) *MailgunNotifier {
+func New(domain, privateKey, sender, recipient string) (*MailgunNotifier, error) {
+	if domain == "" {
+	}
+	if privateKey == "" {
+	}
+	if sender == "" {
+	}
+	if recipient == "" {
+	}
+
 	return &MailgunNotifier{
 		Domain:     domain,
 		PrivateKey: privateKey,
 		Sender:     sender,
 		Recipient:  recipient,
-	}
+	}, nil
 }
 
 func (m MailgunNotifier) Notify(kind string, report *gjallarhorn.Report) {

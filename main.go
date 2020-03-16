@@ -1,40 +1,44 @@
 package main
 
 import (
+	"flag"
 	"os"
 
-	"github.com/4nth0/heimdall/internal/config"
-	"github.com/4nth0/heimdall/pkg/gjallarhorn"
-	"github.com/4nth0/heimdall/pkg/notifier/mailgun"
-	"github.com/4nth0/heimdall/pkg/notifier/slack"
-	"github.com/4nth0/heimdall/pkg/watcher"
 	log "github.com/sirupsen/logrus"
 )
 
-func main() {
-	log.SetOutput(os.Stdout)
-	log.SetLevel(log.DebugLevel)
-
-	cfg := config.LoadConfig("targets.yaml")
-	frequency := cfg.GetFrequency()
-
-	notifiers := initNotifiers(cfg)
-	reporter := gjallarhorn.NewReporter(notifiers)
-	watchers := watcher.InitWtachers(cfg.Targets, frequency)
-	// Use context ..
-	responses, _ := watchers.Watch()
-
-	reporter.Analyze(responses)
+type command struct {
+	fs *flag.FlagSet
+	fn func(args []string) error
 }
 
-func initNotifiers(cfg *config.Config) []gjallarhorn.Notifier {
-	return []gjallarhorn.Notifier{
-		mailgun.New(
-			cfg.Notifiers["mailgun"]["domain"],
-			cfg.Notifiers["mailgun"]["private_key"],
-			cfg.Notifiers["mailgun"]["sender"],
-			cfg.Notifiers["mailgun"]["recipient"],
-		),
-		slack.New(),
+var Version string
+var ConfigPath string = "./targets.yaml"
+
+func main() {
+	log.SetOutput(os.Stdout)
+	log.SetLevel(log.TraceLevel)
+
+	commands := map[string]command{
+		// "init": initCmd(),
+		// "help": helpCmd(),
+		// "targets": helpCmd(),
+		"watch": watchCmd(),
+	}
+
+	fs := flag.NewFlagSet("heimdall", flag.ExitOnError)
+	fs.Parse(os.Args[1:])
+	args := fs.Args()
+
+	if len(args) == 0 {
+		help("No command provided.")
+		return
+	}
+
+	if cmd, ok := commands[args[0]]; !ok {
+		log.Fatalf("Unknown command: %s", args[0])
+	} else if err := cmd.fn(args[1:]); err != nil {
+		help("Unknown command: %s", args[0])
+		log.Print(err)
 	}
 }

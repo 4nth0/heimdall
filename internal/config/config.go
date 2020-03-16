@@ -39,13 +39,10 @@ func LoadConfig(path string) *Config {
 }
 
 func (c Config) GetFrequency() time.Duration {
-
 	switch c.Frequency.Unit {
 	case "sec", "secconde":
-		fmt.Println("secondes - c.Frequency.Value: ", c.Frequency.Value)
 		return time.Duration(c.Frequency.Value) * time.Second
 	case "min", "minute":
-		fmt.Println("minutes - c.Frequency.Value: ", c.Frequency.Value)
 		return time.Duration(c.Frequency.Value) * time.Minute
 	}
 
