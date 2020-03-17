@@ -47,16 +47,18 @@ func watch(opts *watchOpts) (err error) {
 func initNotifiers(cfg *config.Config) []gjallarhorn.Notifier {
 	notifiers := []gjallarhorn.Notifier{}
 
-	mg, err := mailgun.New(
-		cfg.Notifiers["mailgun"]["domain"],
-		cfg.Notifiers["mailgun"]["private_key"],
-		cfg.Notifiers["mailgun"]["sender"],
-		cfg.Notifiers["mailgun"]["recipient"],
-	)
-	if err != nil {
-		log.Error("Mailgun initialization error: ", err.Error())
-	} else {
-		notifiers = append(notifiers, mg)
+	if len(cfg.Notifiers["mailgun"]) > 0 {
+		mg, err := mailgun.New(
+			cfg.Notifiers["mailgun"]["domain"],
+			cfg.Notifiers["mailgun"]["private_key"],
+			cfg.Notifiers["mailgun"]["sender"],
+			cfg.Notifiers["mailgun"]["recipient"],
+		)
+		if err != nil {
+			log.Error("Mailgun initialization error: ", err.Error())
+		} else {
+			notifiers = append(notifiers, mg)
+		}
 	}
 
 	notifiers = append(notifiers, slack.New())

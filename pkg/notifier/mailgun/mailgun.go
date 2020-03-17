@@ -2,6 +2,7 @@ package mailgun
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -19,12 +20,16 @@ type MailgunNotifier struct {
 
 func New(domain, privateKey, sender, recipient string) (*MailgunNotifier, error) {
 	if domain == "" {
+		return nil, errors.New("Domain is not provided")
 	}
 	if privateKey == "" {
+		return nil, errors.New("Private Key is not provided")
 	}
 	if sender == "" {
+		return nil, errors.New("Sender is not provided")
 	}
 	if recipient == "" {
+		return nil, errors.New("Recipient is not provided")
 	}
 
 	return &MailgunNotifier{

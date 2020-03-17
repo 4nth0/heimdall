@@ -1,5 +1,5 @@
 frequency:
-    unit: min
+    unit: sec
     value: 30
 targets:
     video-ref:
