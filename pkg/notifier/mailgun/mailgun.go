@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/4nth0/heimdall/pkg/gjallarhorn"
@@ -19,17 +20,22 @@ type MailgunNotifier struct {
 }
 
 func New(domain, privateKey, sender, recipient string) (*MailgunNotifier, error) {
+	errorKeys := []string{}
 	if domain == "" {
-		return nil, errors.New("Domain is not provided")
+		errorKeys = append(errorKeys, "Domain is not provided")
 	}
 	if privateKey == "" {
-		return nil, errors.New("Private Key is not provided")
+		errorKeys = append(errorKeys, "Private Key is not provided")
 	}
 	if sender == "" {
-		return nil, errors.New("Sender is not provided")
+		errorKeys = append(errorKeys, "Sender is not provided")
 	}
 	if recipient == "" {
-		return nil, errors.New("Recipient is not provided")
+		errorKeys = append(errorKeys, "Recipient is not provided")
+	}
+
+	if len(errorKeys) > 0 {
+		return nil, errors.New(strings.Join(errorKeys, ", "))
 	}
 
 	return &MailgunNotifier{
@@ -47,8 +53,8 @@ func (m MailgunNotifier) Notify(kind string, report *gjallarhorn.Report) {
 func (m MailgunNotifier) sendSimpleMessage() {
 	mg := mailgun.NewMailgun(m.Domain, m.PrivateKey)
 
-	subject := "Fancy subject!"
-	body := "Hello from Mailgun Go!"
+	subject := "Heimdall error report"
+	body := "Hi! "
 
 	message := mg.NewMessage(m.Sender, subject, body, m.Recipient)
 
